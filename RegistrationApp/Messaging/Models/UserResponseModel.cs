@@ -7,6 +7,8 @@
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
 
+        public UserResponseModel? Match { get; set; }
+
         public UserResponseModel(string id, string name, string email, string phoneNumber)
         {
             Id = id;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
 namespace RegistrationAppDAL.Models
@@ -7,12 +8,17 @@ namespace RegistrationAppDAL.Models
     {
         public List<string> FormerMatches { get; }
 
-        public DanceClass Level { get; set; }
+        public Level Level { get; set; }
 
-        public ApplicationUser(DanceClass level)
+        public DanceGender Gender { get; set; }
+
+        public ApplicationUser(Level level, DanceGender gender)
         {
             Level = level;
+            Gender = gender;
             FormerMatches = new List<string>();
         }
+
+        public DateTime? Attending { get; set; }
     }
 }

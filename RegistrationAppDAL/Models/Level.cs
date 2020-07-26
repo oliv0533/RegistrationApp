@@ -1,6 +1,6 @@
 ﻿namespace RegistrationAppDAL.Models
 {
-    public enum DanceClass
+    public enum Level
     {
         Beginner,
         Novice,
