@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using RegistrationApp.Messaging.Commands.SetPartnerForCouple;
 using RegistrationApp.Messaging.Models;
 using RegistrationApp.Messaging.Queries.GetAllAttendingUsersWithLevel;
 using RegistrationAppDAL.Models;
@@ -34,7 +36,27 @@ namespace RegistrationApp.Messaging.Queries.GetRandomPairingsOfAttendingUsersWit
 
             FindBestMatchesForAttendees(maleResponseModels, malePreferenceModels, femaleResponseModels, femalePreferenceModels);
 
+            await SetPartnersForNewlyMatchedDancers(cancellationToken, maleResponseModels);
+
             return maleResponseModels.Concat(femaleResponseModels).ToList();
+        }
+
+        private async Task SetPartnersForNewlyMatchedDancers(CancellationToken cancellationToken, List<UserResponseModel> maleResponseModels)
+        {
+            foreach (var maleResponseModel in maleResponseModels)
+            {
+                var femaleResponseModel = maleResponseModel.Match;
+                if (femaleResponseModel?.Match == null)
+                {
+                    throw new InvalidOperationException("The partner does not exists on one of the models");
+                }
+
+                await _mediator.Send(
+                    new SetPartnerForCoupleCommand(
+                        maleResponseModel.Id,
+                        femaleResponseModel.Id),
+                    cancellationToken);
+            }
         }
 
         private static void FindBestMatchesForAttendees(IReadOnlyCollection<UserResponseModel> maleResponseModels, IReadOnlyCollection<PreferenceModel> malePreferenceModels,
@@ -100,7 +122,8 @@ namespace RegistrationApp.Messaging.Queries.GetRandomPairingsOfAttendingUsersWit
             foreach (var dancer in genderToFindPreferencesFor)
             {
                 var preferenceModel = new PreferenceModel(dancer.Id);
-                var partnersNotYetDancedWith = partnerIds.Where(x => !dancer.FormerMatches.Contains(x));
+                var partnersNotYetDancedWith = partnerIds
+                    .Where(x => !dancer.FormerMatches.Exists(y => y.PartnerId == x));
                 foreach (var partner in partnersNotYetDancedWith)
                 {
                     preferenceModel.PreferenceOrder.Add(partner);
@@ -108,7 +131,7 @@ namespace RegistrationApp.Messaging.Queries.GetRandomPairingsOfAttendingUsersWit
 
                 var partnersDancedWithAscending =
                     dancer.FormerMatches
-                        .GroupBy(x => x)
+                        .GroupBy(x => x.PartnerId)
                         .Select(x => new {Id = x.Key, Count = x.Count()})
                         .OrderBy(x => x.Count);
 
