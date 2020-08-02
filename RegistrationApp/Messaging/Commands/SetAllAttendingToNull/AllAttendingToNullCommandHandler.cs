@@ -20,9 +20,9 @@ namespace RegistrationApp.Messaging.Commands.SetAllAttendingToNull
             return Task.FromResult(Unit.Value);
         }
 
-        public AllAttendingToNullCommandHandler(ApplicationDbContext _context)
+        public AllAttendingToNullCommandHandler(ApplicationDbContext context)
         {
-            this._context = _context;
+            this._context = context;
         }
     }
 }

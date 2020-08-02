@@ -21,9 +21,9 @@ namespace RegistrationApp.Messaging.Queries.GetAllAttendingUsersWithLevel
 
         public Task<List<ApplicationUser>> Handle(GetAllAttendingUsersWithLevelQuery request, CancellationToken cancellationToken)
         {
-            return _context.Users
-                .Where(x => x.Level == request.Level && x.Attending != null)
-                .ToListAsync(cancellationToken);
+            var users = _context.Users
+                .Where(x => x.Level == request.Level && x.Attending != null);
+            return users.ToListAsync(cancellationToken);
         }
     }
 } 

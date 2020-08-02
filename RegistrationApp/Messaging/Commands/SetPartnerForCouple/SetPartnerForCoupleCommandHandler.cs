@@ -11,20 +11,24 @@ namespace RegistrationApp.Messaging.Commands.SetPartnerForCouple
     {
         private readonly ApplicationDbContext _context;
 
-        public Task<Unit> Handle(SetPartnerForCoupleCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(SetPartnerForCoupleCommand request, CancellationToken cancellationToken)
         {
-            var male = _context.Users.Find(request.MaleId);
-            var female = _context.Users.Find(request.FemaleId);
+            var male = await _context.Users.FindAsync(request.MaleId, cancellationToken);
+            var female = await _context.Users.FindAsync(request.FemaleId, cancellationToken);
+
+            var today = DateTime.Today;
 
             if (male == null || female == null)
             {
                 throw new InvalidOperationException("Male or female was null");
             }
 
-            male.FormerMatches.Add(new FormerMatches(female.Id, DateTime.Today));
-            female.FormerMatches.Add(new FormerMatches(male.Id, DateTime.Today));
+            male.FormerMatches.Add(new FormerMatch(female.Id, today));
+            female.FormerMatches.Add(new FormerMatch(male.Id, today));
 
-            return Unit.Task;
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return Unit.Value;
         }
 
         public SetPartnerForCoupleCommandHandler(ApplicationDbContext context)

@@ -6,7 +6,7 @@ namespace RegistrationAppDAL.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public List<FormerMatches> FormerMatches { get; }
+        public List<FormerMatch> FormerMatches { get; }
 
         public Level Level { get; set; }
 
@@ -16,19 +16,19 @@ namespace RegistrationAppDAL.Models
         {
             Level = level;
             Gender = gender;
-            FormerMatches = new List<FormerMatches>();
+            FormerMatches = new List<FormerMatch>();
         }
 
         public DateTime? Attending { get; set; }
     }
 
-    public class FormerMatches
+    public class FormerMatch
     {
         public string PartnerId { get; }
 
         public DateTime DateDanced { get;}
 
-        public FormerMatches(string partnerId, DateTime dateDanced)
+        public FormerMatch(string partnerId, DateTime dateDanced)
         {
             PartnerId = partnerId;
             DateDanced = dateDanced;

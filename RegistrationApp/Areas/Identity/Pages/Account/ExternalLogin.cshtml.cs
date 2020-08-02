@@ -52,6 +52,12 @@ namespace RegistrationApp.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             public string Email { get; set; }
+
+            [Required]
+            public DanceGender Gender { get; set; }
+
+            [Required]
+            public Level Level { get; set; }
         }
 
         public IActionResult OnGetAsync()
@@ -122,7 +128,7 @@ namespace RegistrationApp.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+                var user = new ApplicationUser(Input.Level, Input.Gender) { UserName = Input.Email, Email = Input.Email };
 
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)

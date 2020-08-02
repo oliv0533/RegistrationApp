@@ -59,8 +59,11 @@ namespace RegistrationApp.Messaging.Queries.GetRandomPairingsOfAttendingUsersWit
             }
         }
 
-        private static void FindBestMatchesForAttendees(IReadOnlyCollection<UserResponseModel> maleResponseModels, IReadOnlyCollection<PreferenceModel> malePreferenceModels,
-            IReadOnlyCollection<UserResponseModel> femaleResponseModels, IReadOnlyCollection<PreferenceModel> femalePreferenceModels)
+        private static void FindBestMatchesForAttendees(
+            IReadOnlyCollection<UserResponseModel> maleResponseModels, 
+            IReadOnlyCollection<PreferenceModel> malePreferenceModels,
+            IReadOnlyCollection<UserResponseModel> femaleResponseModels, 
+            IReadOnlyCollection<PreferenceModel> femalePreferenceModels)
         {
             var freeCount = maleResponseModels.Count;
 
@@ -139,6 +142,7 @@ namespace RegistrationApp.Messaging.Queries.GetRandomPairingsOfAttendingUsersWit
                 {
                     preferenceModel.PreferenceOrder.Add(partner.Id);
                 }
+                preferenceModels.Add(preferenceModel);
             }
         }
 
@@ -152,6 +156,9 @@ namespace RegistrationApp.Messaging.Queries.GetRandomPairingsOfAttendingUsersWit
             {
                 _attendingMen = LimitAttendees(_attendingMen, _attendingWomen);
             }
+
+            _attendingWomen = _attendingWomen.OrderByDescending(x => x.FormerMatches.Count).ToList();
+            _attendingMen = _attendingMen.OrderByDescending(x => x.FormerMatches.Count).ToList();
         }
 
         private static List<ApplicationUser> LimitAttendees(IEnumerable<ApplicationUser> outnumberingGender, ICollection outnumberedGender)
