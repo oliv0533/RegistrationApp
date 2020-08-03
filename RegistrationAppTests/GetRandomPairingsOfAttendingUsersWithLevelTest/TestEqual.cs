@@ -185,5 +185,149 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
             Assert.AreNotEqual(null, result.First(x => x.Id == firstBoy.Id).Match);
             Assert.AreNotEqual(firstGirl.Id, result.First(x => x.Id == firstBoy.Id).Match!.Id);
         }
+
+        [Test]
+        public async Task TestEqualBoysAndGirlsWithManyFormerPartners()
+        {
+            //Arrange
+            using var testHandle = new UnitTestHandle();
+
+            var data = new List<ApplicationUser>();
+
+            var time = DateTime.Now;
+
+            var firstBoy = new ApplicationUser(Level.Beginner, DanceGender.Male)
+            {
+                Attending = time,
+                Id = "first-boy"
+            };
+            var firstGirl = new ApplicationUser(Level.Beginner, DanceGender.Female)
+            {
+                Attending = time,
+                Id = "first-girl"
+            };
+            var secondBoy = new ApplicationUser(Level.Beginner, DanceGender.Male)
+            {
+                Attending = time,
+                Id = "second-boy"
+            };
+            var secondGirl = new ApplicationUser(Level.Beginner, DanceGender.Female)
+            {
+                Attending = time,
+                Id = "second-girl"
+            };
+            var thirdBoy = new ApplicationUser(Level.Beginner, DanceGender.Male)
+            {
+                Attending = time,
+                Id = "third-boy"
+            };
+            var thirdGirl = new ApplicationUser(Level.Beginner, DanceGender.Female)
+            {
+                Attending = time,
+                Id = "third-girl"
+            };
+            var fourthBoy = new ApplicationUser(Level.Beginner, DanceGender.Male)
+            {
+                Attending = time,
+                Id = "fourth-boy"
+            };
+            var fourthGirl = new ApplicationUser(Level.Beginner, DanceGender.Female)
+            {
+                Attending = time,
+                Id = "fourth-girl"
+            };
+
+
+
+            data.Add(secondBoy);
+            data.Add(secondGirl);
+            data.Add(firstBoy);
+            data.Add(firstGirl);
+            data.Add(thirdBoy);
+            data.Add(thirdGirl);
+            data.Add(fourthBoy);
+            data.Add(fourthGirl);
+
+            firstBoy.FormerMatches.AddRange(new List<FormerMatch>
+            {
+                new FormerMatch(firstGirl.Id, time), 
+                new FormerMatch(secondGirl.Id, time),
+                new FormerMatch(secondGirl.Id, time),
+                new FormerMatch(thirdGirl.Id, time)
+            });
+
+            firstGirl.FormerMatches.AddRange(new List<FormerMatch>
+            {
+                new FormerMatch(firstBoy.Id, time),
+                new FormerMatch(thirdBoy.Id, time),
+                new FormerMatch(fourthBoy.Id, time)
+            });
+
+            secondBoy.FormerMatches.AddRange(new List<FormerMatch>
+            {
+                new FormerMatch(secondGirl.Id, time),
+                new FormerMatch(secondGirl.Id, time),
+                new FormerMatch(fourthGirl.Id, time)
+            });
+
+            secondGirl.FormerMatches.AddRange(new List<FormerMatch>
+            {
+                new FormerMatch(secondBoy.Id, time),
+                new FormerMatch(secondBoy.Id, time),
+                new FormerMatch(firstBoy.Id, time),
+                new FormerMatch(firstBoy.Id, time)
+            });
+
+            thirdBoy.FormerMatches.AddRange(new List<FormerMatch>
+            {
+                new FormerMatch(firstGirl.Id, time),
+                new FormerMatch(fourthGirl.Id, time),
+            });
+
+            thirdGirl.FormerMatches.AddRange(new List<FormerMatch>
+            {
+                new FormerMatch(firstBoy.Id, time),
+                new FormerMatch(fourthBoy.Id, time),
+                new FormerMatch(fourthBoy.Id, time)
+            });
+
+            fourthBoy.FormerMatches.AddRange(new List<FormerMatch>
+            {
+                new FormerMatch(firstGirl.Id, time),
+                new FormerMatch(thirdGirl.Id, time),
+                new FormerMatch(thirdGirl.Id, time)
+            });
+
+            fourthGirl.FormerMatches.AddRange(new List<FormerMatch>
+            {
+                new FormerMatch(secondBoy.Id, time),
+                new FormerMatch(thirdBoy.Id, time)
+            });
+
+            TestHelper.SetupData(data.AsQueryable(), testHandle);
+
+            testHandle.MockContext.Setup(c => c.Users).Returns(testHandle.MockSet.Object);
+
+            var command = new GetRandomPairingsOfAttendingUsersWithLevelQuery(Level.Beginner);
+
+            var mediator = new Mock<IMediator>();
+
+            mediator
+                .Setup(x => x
+                    .Send(It.IsAny<GetAllAttendingUsersWithLevelQuery>(), CancellationToken.None))
+                .Returns(Task.FromResult(data.ToList()));
+
+            var commandHandler = new GetRandomPairingsOfAttendingUsersWithLevelQueryHandler(mediator.Object);
+
+            //Act
+            var result = await commandHandler.Handle(command, new CancellationToken());
+
+            //Assert
+            Assert.AreEqual(8, result.Count);
+            Assert.AreEqual(fourthGirl.Id, result.First(x => x.Id == firstBoy.Id).Match!.Id);
+            Assert.AreEqual(firstGirl.Id, result.First(x => x.Id == secondBoy.Id).Match!.Id);
+            Assert.AreEqual(thirdGirl.Id, result.First(x => x.Id == thirdBoy.Id).Match!.Id);
+            Assert.AreEqual(secondGirl.Id, result.First(x => x.Id == fourthBoy.Id).Match!.Id);
+        }
     }
 }
