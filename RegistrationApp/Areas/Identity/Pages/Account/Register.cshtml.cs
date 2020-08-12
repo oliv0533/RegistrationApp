@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using RegistrationApp.Services;
 using RegistrationAppDAL.Models;
 
 namespace RegistrationApp.Areas.Identity.Pages.Account
@@ -20,27 +21,30 @@ namespace RegistrationApp.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IEnumConverterService _enumConverterService;
 
         public RegisterModel(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IEnumConverterService enumConverterService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _enumConverterService = enumConverterService;
         }
 
         [BindProperty]
         public InputModel Input { get; set; }
 
-        public string ReturnUrl { get; set; }
+        public string? ReturnUrl { get; set; }
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
@@ -52,6 +56,28 @@ namespace RegistrationApp.Areas.Identity.Pages.Account
             public string Email { get; set; }
 
             [Required]
+            [EmailAddress]
+            [Display(Name = "Bekræft Email")]
+            [Compare("Email", ErrorMessage = "The email and confirmation email do not match")]
+            public string ConfirmEmail { get; set; }
+
+            [Required]
+            [Display(Name = "Fuldt Navn")]
+            public string Name { get; set; }
+
+            [Required]
+            [Display(Name = "Telefonnummer")]
+            public string TelephoneNumber { get; set; }
+
+            [Required]
+            [Display(Name = "Hold")]
+            public string DanceLevel { get; set; }
+
+            [Required]
+            [Display(Name = "Dansekøn")]
+            public string DanceGender { get; set; }
+
+            [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
@@ -61,27 +87,65 @@ namespace RegistrationApp.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
-
-            [Required]
-            public DanceGender Gender { get; set; }
-
-            [Required]
-            public Level Level { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public List<string> Levels { get; set; } = new List<string>();
+
+        public void CheckboxClicked(string level, object checkedValue)
+        {
+            if ((bool)checkedValue)
+            {
+                if (!Levels.Contains(level))
+                {
+                    Levels.Add(level);
+                }
+            }
+            else
+            {
+                if (Levels.Contains(level))
+                {
+                    Levels.Remove(level);
+                }
+            }
+        }
+
+        public List<string> GetAllLevelsInDanish()
+        {
+            return (from level in (Level[]) Enum.GetValues(typeof(Level)) select _enumConverterService.ConvertLevelToDanishString(level)).ToList();
+        }
+
+        public List<string> GetAllGendersInDanish()
+        {
+            return (from gender in (DanceGender[])Enum.GetValues(typeof(DanceGender)) select _enumConverterService.ConvertGenderToDanishString(gender)).ToList();
+        }
+
+        private Level GetLevelFromDanishString(string level)
+        {
+            return _enumConverterService.ConvertDanishStringToLevel(level);
+        }
+
+        private DanceGender GetGenderFromDanishString(string gender)
+        {
+            return _enumConverterService.ConvertDanishStringToGender(gender);
+        }
+
+        public async Task OnGetAsync(string? returnUrl = null)
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser(Input.Level, Input.Gender) { UserName = Input.Email, Email = Input.Email };
+                var levels = new List<Level>();
+
+                Levels.ForEach(x => levels.Add(GetLevelFromDanishString(x)));
+
+                var user = new ApplicationUser(levels, GetGenderFromDanishString(Input.DanceGender)) { UserName = Input.Email, Email = Input.Email, PhoneNumber = Input.TelephoneNumber, NormalizedUserName = Input.Name};
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

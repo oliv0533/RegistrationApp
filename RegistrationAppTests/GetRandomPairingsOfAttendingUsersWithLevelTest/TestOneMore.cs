@@ -22,17 +22,17 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
 
             var data = new List<ApplicationUser>
             {
-                new ApplicationUser(Level.Beginner, DanceGender.Male)
+                new ApplicationUser(new List<Level>{Level.Beginner}, DanceGender.Male)
                 {
-                    Attending = DateTime.Now
+                    Attending = new Attending(new List<Level> { Level.Beginner }, DateTime.Now)
                 },
-                new ApplicationUser(Level.Beginner, DanceGender.Female)
+                new ApplicationUser(new List<Level>{Level.Beginner}, DanceGender.Female)
                 {
-                    Attending = DateTime.Now
+                    Attending = new Attending(new List<Level> { Level.Beginner }, DateTime.Now)
                 },
-                new ApplicationUser(Level.Beginner, DanceGender.Female)
+                new ApplicationUser(new List<Level>{Level.Beginner}, DanceGender.Female)
                 {
-                    Attending = DateTime.Now,
+                    Attending = new Attending(new List<Level> { Level.Beginner }, DateTime.Now),
                     Id = "some-id"
                 },
             }.AsQueryable();
@@ -41,7 +41,7 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
 
             testHandle.MockContext.Setup(c => c.Users).Returns(testHandle.MockSet.Object);
 
-            var command = new GetRandomPairingsOfAttendingUsersWithLevelQuery(Level.Beginner);
+            var command = new GetRandomPairingsOfAttendingUsersWithLevelQuery(new List<Level> { Level.Beginner });
 
             var mediator = new Mock<IMediator>();
 
@@ -68,18 +68,18 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
 
             var data = new List<ApplicationUser>
             {
-                new ApplicationUser(Level.Beginner, DanceGender.Male)
+                new ApplicationUser(new List<Level>{Level.Beginner}, DanceGender.Male)
                 {
-                    Attending = DateTime.Now
+                    Attending = new Attending(new List<Level> { Level.Beginner }, DateTime.Now)
                 },
-                new ApplicationUser(Level.Beginner, DanceGender.Male)
+                new ApplicationUser(new List<Level>{Level.Beginner}, DanceGender.Male)
                 {
-                    Attending = DateTime.Now,
+                    Attending = new Attending(new List<Level> { Level.Beginner }, DateTime.Now),
                     Id = "some-id"
                 },
-                new ApplicationUser(Level.Beginner, DanceGender.Female)
+                new ApplicationUser(new List<Level>{Level.Beginner}, DanceGender.Female)
                 {
-                    Attending = DateTime.Now
+                    Attending = new Attending(new List<Level> { Level.Beginner }, DateTime.Now)
                 },
             }.AsQueryable();
 
@@ -87,7 +87,7 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
 
             testHandle.MockContext.Setup(c => c.Users).Returns(testHandle.MockSet.Object);
 
-            var command = new GetRandomPairingsOfAttendingUsersWithLevelQuery(Level.Beginner);
+            var command = new GetRandomPairingsOfAttendingUsersWithLevelQuery(new List<Level> { Level.Beginner });
 
             var mediator = new Mock<IMediator>();
 

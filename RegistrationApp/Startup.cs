@@ -15,7 +15,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RegistrationApp.Areas.Identity;
+using RegistrationApp.Services;
 using RegistrationAppDAL.Data;
+using RegistrationAppDAL.Models;
 
 namespace RegistrationApp
 {
@@ -42,6 +44,7 @@ namespace RegistrationApp
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             //services.AddSingleton<WeatherForecastService>();
 
+            services.AddScoped<IEnumConverterService, EnumConverterService>();
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireLowercase = false;

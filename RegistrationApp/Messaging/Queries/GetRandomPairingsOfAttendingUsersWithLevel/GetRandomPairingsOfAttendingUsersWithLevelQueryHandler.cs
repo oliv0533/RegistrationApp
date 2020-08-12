@@ -21,7 +21,7 @@ namespace RegistrationApp.Messaging.Queries.GetRandomPairingsOfAttendingUsersWit
 
         public async Task<List<UserResponseModel>> Handle(GetRandomPairingsOfAttendingUsersWithLevelQuery request, CancellationToken cancellationToken)
         {
-            var attendingUsers = await _mediator.Send(new GetAllAttendingUsersWithLevelQuery(request.Level), cancellationToken);
+            var attendingUsers = await _mediator.Send(new GetAllAttendingUsersWithLevelQuery(request.Levels), cancellationToken);
             _attendingMen = GetAttendingUsersByGenderOrderedByDate(DanceGender.Male, attendingUsers);
             _attendingWomen = GetAttendingUsersByGenderOrderedByDate(DanceGender.Female, attendingUsers);
             

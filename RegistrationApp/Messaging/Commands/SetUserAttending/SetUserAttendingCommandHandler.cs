@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using RegistrationAppDAL.Data;
+using RegistrationAppDAL.Models;
 
 namespace RegistrationApp.Messaging.Commands.SetUserAttending
 {
@@ -18,8 +21,9 @@ namespace RegistrationApp.Messaging.Commands.SetUserAttending
             {
                 throw new InvalidOperationException("User not found");
             }
-
+            
             user.Attending = request.Attending;
+
             await _context.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;

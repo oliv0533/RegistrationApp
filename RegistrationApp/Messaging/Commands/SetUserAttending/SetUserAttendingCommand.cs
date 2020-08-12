@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using MediatR;
+using RegistrationAppDAL.Models;
 
 namespace RegistrationApp.Messaging.Commands.SetUserAttending
 {
@@ -7,7 +9,7 @@ namespace RegistrationApp.Messaging.Commands.SetUserAttending
     {
         public string UserId { get; set; }
 
-        public DateTime? Attending { get; set; }
+         public Attending? Attending { get; set; }
 
         public SetUserAttendingCommand(string userId)
         {

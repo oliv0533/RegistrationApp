@@ -8,11 +8,11 @@ namespace RegistrationApp.Messaging.Queries.GetRandomPairingsOfAttendingUsersWit
 {
     public class GetRandomPairingsOfAttendingUsersWithLevelQuery : IRequest<List<UserResponseModel>>
     {
-        public Level Level { get; }
+        public List<Level> Levels { get; }
 
-        public GetRandomPairingsOfAttendingUsersWithLevelQuery(Level level)
+        public GetRandomPairingsOfAttendingUsersWithLevelQuery(List<Level> levels)
         {
-            Level = level;
+            Levels = levels;
         }
     }
 }

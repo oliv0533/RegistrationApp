@@ -8,18 +8,18 @@ namespace RegistrationAppDAL.Models
     {
         public List<FormerMatch> FormerMatches { get; }
 
-        public Level Level { get; set; }
+        public List<Level> Levels { get; set; }
 
         public DanceGender Gender { get; set; }
 
-        public ApplicationUser(Level level, DanceGender gender)
+        public Attending? Attending { get; set; }
+
+        public ApplicationUser(List<Level> levels, DanceGender gender)
         {
-            Level = level;
+            Levels = levels;
             Gender = gender;
             FormerMatches = new List<FormerMatch>();
         }
-
-        public DateTime? Attending { get; set; }
     }
 
     public class FormerMatch
@@ -32,6 +32,29 @@ namespace RegistrationAppDAL.Models
         {
             PartnerId = partnerId;
             DateDanced = dateDanced;
+        }
+    }
+
+    public class Attending : IComparable
+    {
+        public Attending(List<Level> levels, DateTime date)
+        {
+            Levels = levels;
+            Date = date;
+        }
+
+        public DateTime Date { get; }
+
+        public List<Level> Levels { get; }
+        public int CompareTo(object? obj)
+        {
+            if (obj == null)
+            {
+                return -1;
+            }
+            Attending a = (Attending) obj;
+            if (Date < a.Date) return -1;
+            return Date.Equals(a.Date) ? 0 : 1;
         }
     }
 }
