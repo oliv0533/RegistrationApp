@@ -10,5 +10,7 @@ namespace RegistrationAppDAL.Data
             : base(options)
         {
         }
+
+        public DbSet<AllPairingsModel> WeeklyPairings { get; set; }
     }
 }
