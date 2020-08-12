@@ -1,10 +1,19 @@
-﻿namespace RegistrationAppDAL.Models
+﻿using System;
+
+namespace RegistrationAppDAL.Models
 {
-    public enum Level
+    public static class Level
     {
-        Beginner,
-        Novice,
-        Advanced,
-        Theme
+        public const string Beginner = "beginner";
+        public const string Novice = "novice";
+        public const string Advanced = "advanced";
+        public const string Theme = "theme";
+
+        public static string[] GetAllLevels()
+        {
+            return new[] {Beginner, Novice, Advanced, Theme};
+        }
     }
+
+
 }

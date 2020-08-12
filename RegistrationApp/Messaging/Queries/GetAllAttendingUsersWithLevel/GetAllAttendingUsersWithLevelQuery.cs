@@ -7,9 +7,9 @@ namespace RegistrationApp.Messaging.Queries.GetAllAttendingUsersWithLevel
 {
     public class GetAllAttendingUsersWithLevelQuery : IRequest<List<ApplicationUser>>
     {
-        public List<Level> Levels { get; }
+        public List<string> Levels { get; }
 
-        public GetAllAttendingUsersWithLevelQuery(List<Level> levels)
+        public GetAllAttendingUsersWithLevelQuery(List<string> levels)
         {
             Levels = levels;
         }

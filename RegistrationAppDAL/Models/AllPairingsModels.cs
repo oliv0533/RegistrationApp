@@ -6,15 +6,14 @@ namespace RegistrationAppDAL.Models
     public class AllPairingsModel
     {
         public AllPairingsModel(
-            List<ApplicationUser> leftoverUsers, 
-            List<Pairing> pairings,
             DateTime date)
         {
-            LeftoverUsers = leftoverUsers;
-            Pairings = pairings;
+            Pairings = new List<Pairing>();
+            LeftoverUsers = new List<ApplicationUser>();
             Date = date;
+            Id = Guid.NewGuid().ToString();
         }
-
+        public string Id { get; set; }
         public List<Pairing> Pairings { get; set; }
         public List<ApplicationUser> LeftoverUsers { get; set; }
         public DateTime Date { get; set; }

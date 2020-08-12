@@ -25,8 +25,9 @@ namespace RegistrationAppTests
             //Arrange
 
             using var handle = new UnitTestHandle();
-            var user = new ApplicationUser(new List<Level>{Level.Advanced}, DanceGender.Male)
+            var user = new ApplicationUser(DanceGender.Male)
             {
+                Levels = new List<string> { Level.Advanced },
                 Id = "mockId"
             };
             handle.MockSet.Setup(m => m.FindAsync(It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns(new ValueTask<ApplicationUser>(user));
@@ -34,7 +35,10 @@ namespace RegistrationAppTests
             var time = DateTime.Now;
 
             var command = new SetUserAttendingCommand("mockId"){
-                Attending = new Attending(new List<Level> {Level.Advanced}, time)
+                Attending = new Attending(time)
+                {
+                    Levels = new List<string> { Level.Advanced }
+                }
             };
 
             var commandHandler = new SetUserAttendingCommandHandler(handle.MockContext.Object);

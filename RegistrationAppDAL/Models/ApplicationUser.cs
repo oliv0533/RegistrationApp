@@ -8,15 +8,15 @@ namespace RegistrationAppDAL.Models
     {
         public List<FormerMatch> FormerMatches { get; }
 
-        public List<Level> Levels { get; set; }
+        public List<string> Levels { get; set; }
 
-        public DanceGender Gender { get; set; }
+        public string Gender { get; set; }
 
         public Attending? Attending { get; set; }
 
-        public ApplicationUser(List<Level> levels, DanceGender gender)
+        public ApplicationUser(string gender)
         {
-            Levels = levels;
+            Levels = new List<string>();
             Gender = gender;
             FormerMatches = new List<FormerMatch>();
         }
@@ -24,28 +24,34 @@ namespace RegistrationAppDAL.Models
 
     public class FormerMatch
     {
-        public string PartnerId { get; }
+        public string PartnerId { get; set; }
 
-        public DateTime DateDanced { get;}
+        public DateTime DateDanced { get; set; }
+
+        public string Id { get; set; }
 
         public FormerMatch(string partnerId, DateTime dateDanced)
         {
             PartnerId = partnerId;
             DateDanced = dateDanced;
+            Id = Guid.NewGuid().ToString();
         }
     }
 
     public class Attending : IComparable
     {
-        public Attending(List<Level> levels, DateTime date)
+        public Attending(DateTime date)
         {
-            Levels = levels;
+            Levels = new List<string>();
             Date = date;
+            Id = Guid.NewGuid().ToString();
         }
 
-        public DateTime Date { get; }
+        public string Id { get; set; }
 
-        public List<Level> Levels { get; }
+        public DateTime Date { get; set; }
+
+        public List<string> Levels { get; set; }
         public int CompareTo(object? obj)
         {
             if (obj == null)

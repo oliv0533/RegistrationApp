@@ -1,15 +1,20 @@
-﻿namespace RegistrationAppDAL.Models
+﻿using System;
+using System.Dynamic;
+
+namespace RegistrationAppDAL.Models
 {
     public class Pairing
     {
-        public ApplicationUser Male { get; set; }
+        public string Id { get; set; }
+        public string MaleUserId { get; set; }
 
-        public ApplicationUser Female { get; set; }
+        public string FemaleUserId { get; set; }
 
-        public Pairing(ApplicationUser male, ApplicationUser female)
+        public Pairing(string maleUserId, string femaleUserId)
         {
-            Male = male;
-            Female = female;
+            MaleUserId = maleUserId;
+            FemaleUserId = femaleUserId;
+            Id = Guid.NewGuid().ToString();
         }
     }
 }

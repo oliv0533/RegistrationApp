@@ -169,7 +169,7 @@ namespace RegistrationApp.Messaging.Queries.GetRandomPairingsOfAttendingUsersWit
                 .ToList();
         }
 
-        private static List<ApplicationUser> GetAttendingUsersByGenderOrderedByDate(DanceGender gender, IEnumerable<ApplicationUser> attendingUsers)
+        private static List<ApplicationUser> GetAttendingUsersByGenderOrderedByDate(string gender, IEnumerable<ApplicationUser> attendingUsers)
         {
             return attendingUsers
                 .Where(x => x.Gender == gender)

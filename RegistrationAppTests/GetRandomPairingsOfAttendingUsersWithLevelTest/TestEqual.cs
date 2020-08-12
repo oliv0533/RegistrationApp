@@ -22,21 +22,37 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
 
             var data = new List<ApplicationUser>
             {
-                new ApplicationUser(new List<Level>{Level.Beginner}, DanceGender.Male)
+                new ApplicationUser(DanceGender.Male)
                 {
-                    Attending = new Attending(new List<Level>{Level.Beginner}, DateTime.Now)
+                    Levels = new List<string>{Level.Beginner},
+                    Attending = new Attending(DateTime.Now)
+                    {
+                        Levels = new List<string>{Level.Beginner}
+                    }
                 },
-                new ApplicationUser(new List<Level>{Level.Beginner}, DanceGender.Female)
+                new ApplicationUser(DanceGender.Female)
                 {
-                    Attending = new Attending(new List<Level>{Level.Beginner}, DateTime.Now)
+                    Levels = new List<string>{Level.Beginner},
+                    Attending = new Attending(DateTime.Now)
+                    {
+                        Levels = new List<string>{Level.Beginner}
+                    }
                 },
-                new ApplicationUser(new List<Level>{Level.Beginner}, DanceGender.Male)
+                new ApplicationUser(DanceGender.Male)
                 {
-                    Attending = new Attending(new List<Level>{Level.Beginner}, DateTime.Now)
+                    Levels = new List<string>{Level.Beginner},
+                    Attending = new Attending(DateTime.Now)
+                    {
+                        Levels = new List<string>{Level.Beginner}
+                    }
                 },
-                new ApplicationUser(new List<Level>{Level.Beginner}, DanceGender.Female)
+                new ApplicationUser(DanceGender.Female)
                 {
-                    Attending = new Attending(new List<Level>{Level.Beginner}, DateTime.Now)
+                    Levels = new List<string>{Level.Beginner},
+                    Attending = new Attending(DateTime.Now)
+                    {
+                        Levels = new List<string>{Level.Beginner}
+                    }
                 },
             }.AsQueryable();
 
@@ -44,7 +60,7 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
 
             testHandle.MockContext.Setup(c => c.Users).Returns(testHandle.MockSet.Object);
 
-            var command = new GetRandomPairingsOfAttendingUsersWithLevelQuery(new List<Level>{Level.Beginner});
+            var command = new GetRandomPairingsOfAttendingUsersWithLevelQuery(new List<string>{Level.Beginner});
 
             var mediator = new Mock<IMediator>();
 
@@ -72,23 +88,39 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
 
             var time = DateTime.Now;
 
-            var firstBoy = new ApplicationUser(new List<Level> { Level.Beginner }, DanceGender.Male)
+            var firstBoy = new ApplicationUser(DanceGender.Male)
             {
-                Attending = new Attending(new List<Level> { Level.Beginner }, DateTime.Now),
+                Levels = new List<string> { Level.Beginner },
+                Attending = new Attending(DateTime.Now)
+                {
+                    Levels = new List<string> { Level.Beginner }
+                },
                 Id = "first-boy"
             };
-            var firstGirl = new ApplicationUser(new List<Level> { Level.Beginner }, DanceGender.Female)
+            var firstGirl = new ApplicationUser(DanceGender.Female)
             {
-                Attending = new Attending(new List<Level> { Level.Beginner }, DateTime.Now),
+                Levels = new List<string> { Level.Beginner },
+                Attending = new Attending(DateTime.Now)
+                {
+                    Levels = new List<string> { Level.Beginner }
+                },
                 Id = "first-girl"
             };
-            var secondBoy = new ApplicationUser(new List<Level> { Level.Beginner }, DanceGender.Male)
+            var secondBoy = new ApplicationUser(DanceGender.Male)
             {
-                Attending = new Attending(new List<Level> { Level.Beginner }, DateTime.Now)
+                Levels = new List<string> { Level.Beginner },
+                Attending = new Attending(DateTime.Now)
+                {
+                    Levels = new List<string> { Level.Beginner }
+                }
             };
-            var secondGirl = new ApplicationUser(new List<Level> { Level.Beginner }, DanceGender.Female)
+            var secondGirl = new ApplicationUser(DanceGender.Female)
             {
-                Attending = new Attending(new List<Level> { Level.Beginner }, DateTime.Now)
+                Levels = new List<string> { Level.Beginner },
+                Attending = new Attending(DateTime.Now)
+                {
+                    Levels = new List<string> { Level.Beginner }
+                }
             };
 
             
@@ -104,7 +136,7 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
 
             testHandle.MockContext.Setup(c => c.Users).Returns(testHandle.MockSet.Object);
 
-            var command = new GetRandomPairingsOfAttendingUsersWithLevelQuery(new List<Level> { Level.Beginner });
+            var command = new GetRandomPairingsOfAttendingUsersWithLevelQuery(new List<string> { Level.Beginner });
 
             var mediator = new Mock<IMediator>();
 
@@ -134,23 +166,39 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
 
             var time = DateTime.Now;
 
-            var firstBoy = new ApplicationUser(new List<Level> { Level.Beginner }, DanceGender.Male)
+            var firstBoy = new ApplicationUser(DanceGender.Male)
             {
-                Attending = new Attending(new List<Level> { Level.Beginner }, DateTime.Now),
+                Levels = new List<string> { Level.Beginner },
+                Attending = new Attending(DateTime.Now)
+                {
+                    Levels = new List<string> { Level.Beginner }
+                },
                 Id = "first-boy"
             };
-            var firstGirl = new ApplicationUser(new List<Level> { Level.Beginner }, DanceGender.Female)
+            var firstGirl = new ApplicationUser(DanceGender.Female)
             {
-                Attending = new Attending(new List<Level> { Level.Beginner }, DateTime.Now),
+                Levels = new List<string> { Level.Beginner },
+                Attending = new Attending(DateTime.Now)
+                {
+                    Levels = new List<string> { Level.Beginner }
+                },
                 Id = "first-girl"
             };
-            var secondBoy = new ApplicationUser(new List<Level> { Level.Beginner }, DanceGender.Male)
+            var secondBoy = new ApplicationUser(DanceGender.Male)
             {
-                Attending = new Attending(new List<Level> { Level.Beginner }, DateTime.Now)
+                Levels = new List<string> { Level.Beginner },
+                Attending = new Attending(DateTime.Now)
+                {
+                    Levels = new List<string> { Level.Beginner }
+                },
             };
-            var secondGirl = new ApplicationUser(new List<Level> { Level.Beginner }, DanceGender.Female)
+            var secondGirl = new ApplicationUser(DanceGender.Female)
             {
-                Attending = new Attending(new List<Level> { Level.Beginner }, DateTime.Now)
+                Levels = new List<string> { Level.Beginner },
+                Attending = new Attending(DateTime.Now)
+                {
+                    Levels = new List<string> { Level.Beginner }
+                },
             };
 
             data.Add(secondBoy);
@@ -166,7 +214,7 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
 
             testHandle.MockContext.Setup(c => c.Users).Returns(testHandle.MockSet.Object);
 
-            var command = new GetRandomPairingsOfAttendingUsersWithLevelQuery(new List<Level> { Level.Beginner });
+            var command = new GetRandomPairingsOfAttendingUsersWithLevelQuery(new List<string> { Level.Beginner });
 
             var mediator = new Mock<IMediator>();
 
@@ -196,44 +244,76 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
 
             var time = DateTime.Now;
 
-            var firstBoy = new ApplicationUser(new List<Level> { Level.Beginner }, DanceGender.Male)
+            var firstBoy = new ApplicationUser(DanceGender.Male)
             {
-                Attending = new Attending(new List<Level> { Level.Beginner }, time),
+                Levels = new List<string> { Level.Beginner },
+                Attending = new Attending(time)
+                {
+                    Levels = new List<string> { Level.Beginner }
+                },
                 Id = "first-boy"
             };
-            var firstGirl = new ApplicationUser(new List<Level> { Level.Beginner }, DanceGender.Female)
+            var firstGirl = new ApplicationUser(DanceGender.Female)
             {
-                Attending = new Attending(new List<Level> { Level.Beginner }, time),
+                Levels = new List<string> { Level.Beginner },
+                Attending = new Attending(time)
+                {
+                    Levels = new List<string> { Level.Beginner }
+                },
                 Id = "first-girl"
             };
-            var secondBoy = new ApplicationUser(new List<Level> { Level.Beginner }, DanceGender.Male)
+            var secondBoy = new ApplicationUser(DanceGender.Male)
             {
-                Attending = new Attending(new List<Level> { Level.Beginner }, time),
+                Levels = new List<string> { Level.Beginner },
+                Attending = new Attending(time)
+                {
+                    Levels = new List<string> { Level.Beginner }
+                },
                 Id = "second-boy"
             };
-            var secondGirl = new ApplicationUser(new List<Level> { Level.Beginner }, DanceGender.Female)
+            var secondGirl = new ApplicationUser(DanceGender.Female)
             {
-                Attending = new Attending(new List<Level> { Level.Beginner }, time),
+                Levels = new List<string> { Level.Beginner },
+                Attending = new Attending(time)
+                {
+                    Levels = new List<string> { Level.Beginner }
+                },
                 Id = "second-girl"
             };
-            var thirdBoy = new ApplicationUser(new List<Level> { Level.Beginner }, DanceGender.Male)
+            var thirdBoy = new ApplicationUser(DanceGender.Male)
             {
-                Attending = new Attending(new List<Level> { Level.Beginner }, time),
+                Levels = new List<string> { Level.Beginner },
+                Attending = new Attending(time)
+                {
+                    Levels = new List<string> { Level.Beginner }
+                },
                 Id = "third-boy"
             };
-            var thirdGirl = new ApplicationUser(new List<Level> { Level.Beginner }, DanceGender.Female)
+            var thirdGirl = new ApplicationUser(DanceGender.Female)
             {
-                Attending = new Attending(new List<Level> { Level.Beginner }, time),
+                Levels = new List<string> { Level.Beginner },
+                Attending = new Attending(time)
+                {
+                    Levels = new List<string> { Level.Beginner }
+                },
                 Id = "third-girl"
             };
-            var fourthBoy = new ApplicationUser(new List<Level> { Level.Beginner }, DanceGender.Male)
+            var fourthBoy = new ApplicationUser(DanceGender.Male)
             {
-                Attending = new Attending(new List<Level> { Level.Beginner }, time),
+                Levels = new List<string> { Level.Beginner },
+                Attending = new Attending(time)
+                {
+                    Levels = new List<string> { Level.Beginner }
+                },
                 Id = "fourth-boy"
             };
-            var fourthGirl = new ApplicationUser(new List<Level> { Level.Beginner }, DanceGender.Female)
+            var fourthGirl = new ApplicationUser(DanceGender.Female)
             {
-                Attending = new Attending(new List<Level> { Level.Beginner }, time),
+                Levels = new List<string> { Level.Beginner },
+                Attending = new Attending(time)
+                {
+                    Levels = new List<string> { Level.Beginner }
+                },
                 Id = "fourth-girl"
             };
 
@@ -308,7 +388,7 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
 
             testHandle.MockContext.Setup(c => c.Users).Returns(testHandle.MockSet.Object);
 
-            var command = new GetRandomPairingsOfAttendingUsersWithLevelQuery(new List<Level> { Level.Beginner });
+            var command = new GetRandomPairingsOfAttendingUsersWithLevelQuery(new List<string> { Level.Beginner });
 
             var mediator = new Mock<IMediator>();
 

@@ -111,20 +111,20 @@ namespace RegistrationApp.Areas.Identity.Pages.Account
 
         public List<string> GetAllLevelsInDanish()
         {
-            return (from level in (Level[]) Enum.GetValues(typeof(Level)) select _enumConverterService.ConvertLevelToDanishString(level)).ToList();
+            return (from level in (Level.GetAllLevels()) select _enumConverterService.ConvertLevelToDanishString(level)).ToList();
         }
 
         public List<string> GetAllGendersInDanish()
         {
-            return (from gender in (DanceGender[])Enum.GetValues(typeof(DanceGender)) select _enumConverterService.ConvertGenderToDanishString(gender)).ToList();
+            return (from gender in (DanceGender.GetAllDanceGenders()) select _enumConverterService.ConvertGenderToDanishString(gender)).ToList();
         }
 
-        private Level GetLevelFromDanishString(string level)
+        private string GetLevelFromDanishString(string level)
         {
             return _enumConverterService.ConvertDanishStringToLevel(level);
         }
 
-        private DanceGender GetGenderFromDanishString(string gender)
+        private string GetGenderFromDanishString(string gender)
         {
             return _enumConverterService.ConvertDanishStringToGender(gender);
         }
@@ -141,11 +141,18 @@ namespace RegistrationApp.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var levels = new List<Level>();
+                var levels = new List<string>();
 
                 Levels.ForEach(x => levels.Add(GetLevelFromDanishString(x)));
 
-                var user = new ApplicationUser(levels, GetGenderFromDanishString(Input.DanceGender)) { UserName = Input.Email, Email = Input.Email, PhoneNumber = Input.TelephoneNumber, NormalizedUserName = Input.Name};
+                var user = new ApplicationUser(GetGenderFromDanishString(Input.DanceGender))
+                {
+                    UserName = Input.Email, 
+                    Email = Input.Email, 
+                    PhoneNumber = Input.TelephoneNumber, 
+                    NormalizedUserName = Input.Name,
+                    Levels = levels
+                };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

@@ -6,7 +6,7 @@ namespace RegistrationApp.Services
 {
     public class EnumConverterService : IEnumConverterService
     {
-        public string ConvertLevelToDanishString(Level level)
+        public string ConvertLevelToDanishString(string level)
         {
             return level switch
             {
@@ -18,7 +18,7 @@ namespace RegistrationApp.Services
             };
         }
 
-        public Level ConvertDanishStringToLevel(string level)
+        public string ConvertDanishStringToLevel(string level)
         {
             return level switch
             {
@@ -30,7 +30,7 @@ namespace RegistrationApp.Services
             };
         }
 
-        public string ConvertGenderToDanishString(DanceGender gender)
+        public string ConvertGenderToDanishString(string gender)
         {
             return gender switch
             {
@@ -40,7 +40,7 @@ namespace RegistrationApp.Services
             };
         }
 
-        public DanceGender ConvertDanishStringToGender(string gender)
+        public string ConvertDanishStringToGender(string gender)
         {
             return gender switch
             {
@@ -53,10 +53,10 @@ namespace RegistrationApp.Services
 
     public interface IEnumConverterService
     {
-        public string ConvertLevelToDanishString(Level level);
-        public Level ConvertDanishStringToLevel(string level);
-        public string ConvertGenderToDanishString(DanceGender gender);
-        public DanceGender ConvertDanishStringToGender(string gender);
+        public string ConvertLevelToDanishString(string level);
+        public string ConvertDanishStringToLevel(string level);
+        public string ConvertGenderToDanishString(string gender);
+        public string ConvertDanishStringToGender(string gender);
 
     }
 }

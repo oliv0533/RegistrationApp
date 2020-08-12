@@ -1,8 +1,15 @@
-﻿namespace RegistrationAppDAL.Models
+﻿using Microsoft.VisualBasic.CompilerServices;
+
+namespace RegistrationAppDAL.Models
 {
-    public enum DanceGender
+    public static class DanceGender
     {
-        Male,
-        Female
+        public const string Male = "male";
+        public const string Female = "female";
+
+        public static string[] GetAllDanceGenders()
+        {
+            return new [] {Male, Female};
+        }
     }
 }

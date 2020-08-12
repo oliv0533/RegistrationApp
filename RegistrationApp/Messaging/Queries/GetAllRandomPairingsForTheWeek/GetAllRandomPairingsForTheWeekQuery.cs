@@ -2,7 +2,7 @@
 
 namespace RegistrationApp.Messaging.Queries.GetAllPairingForTheWeek
 {
-    public class GetAllRandomPairingsForTheWeekQuery : IRequest<>
+    public class GetAllRandomPairingsForTheWeekQuery
     {
         
     }

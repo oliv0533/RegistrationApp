@@ -26,7 +26,7 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
 
             testHandle.MockContext.Setup(c => c.Users).Returns(testHandle.MockSet.Object);
 
-            var command = new GetRandomPairingsOfAttendingUsersWithLevelQuery(new List<Level> { Level.Beginner });
+            var command = new GetRandomPairingsOfAttendingUsersWithLevelQuery(new List<string> { Level.Beginner });
 
             var mediator = new Mock<IMediator>();
 
