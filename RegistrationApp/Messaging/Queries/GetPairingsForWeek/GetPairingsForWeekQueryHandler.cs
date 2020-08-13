@@ -46,15 +46,21 @@ namespace RegistrationApp.Messaging.Queries.GetPairingsForWeek
                     dancer.Id, 
                     dancer.NormalizedUserName, 
                     dancer.Email,
-                    dancer.PhoneNumber);
+                    dancer.PhoneNumber,
+                    dancer.Gender)
+                {
+                    Levels = dancer.Levels
+                };
 
                 dancerResponse.Match = new UserResponseModel(
                     partner.Id, 
                     partner.NormalizedUserName, 
                     partner.Email,
-                    partner.PhoneNumber)
+                    partner.PhoneNumber,
+                    partner.Gender)
                 {
-                    Match = dancerResponse
+                    Match = dancerResponse,
+                    Levels = partner.Levels
                 };
 
                 result.Add(dancerResponse);

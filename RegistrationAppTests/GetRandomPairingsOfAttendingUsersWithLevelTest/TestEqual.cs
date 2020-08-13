@@ -75,7 +75,7 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
             var result = await commandHandler.Handle(command, new CancellationToken());
 
             //Assert
-            Assert.AreEqual(4, result.Count);
+            Assert.AreEqual(2, result.Pairings.Count);
         }
 
         [Test]
@@ -151,9 +151,8 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
             var result = await commandHandler.Handle(command, new CancellationToken());
 
             //Assert
-            Assert.AreEqual(4, result.Count);
-            Assert.AreNotEqual(null, result.First(x => x.Id == firstBoy.Id).Match);
-            Assert.AreNotEqual(firstGirl.Id, result.First(x => x.Id == firstBoy.Id).Match!.Id);
+            Assert.AreEqual(2, result.Pairings.Count);
+            Assert.AreNotEqual(firstGirl.Id, result.Pairings.First(x => x.Male.Id == firstBoy.Id).Female.Id);
         }
 
         [Test]
@@ -229,9 +228,9 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
             var result = await commandHandler.Handle(command, new CancellationToken());
 
             //Assert
-            Assert.AreEqual(4, result.Count);
-            Assert.AreNotEqual(null, result.First(x => x.Id == firstBoy.Id).Match);
-            Assert.AreNotEqual(firstGirl.Id, result.First(x => x.Id == firstBoy.Id).Match!.Id);
+            Assert.AreEqual(2, result.Pairings.Count);
+            Assert.NotNull(result.Pairings.First(x => x.Male.Id == firstBoy.Id).Female);
+            Assert.AreNotEqual(firstGirl.Id, result.Pairings.First(x => x.Male.Id == firstBoy.Id).Female.Id);
         }
 
         [Test]
@@ -403,11 +402,12 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
             var result = await commandHandler.Handle(command, new CancellationToken());
 
             //Assert
-            Assert.AreEqual(8, result.Count);
-            Assert.AreEqual(fourthGirl.Id, result.First(x => x.Id == firstBoy.Id).Match!.Id);
-            Assert.AreEqual(firstGirl.Id, result.First(x => x.Id == secondBoy.Id).Match!.Id);
-            Assert.AreEqual(thirdGirl.Id, result.First(x => x.Id == thirdBoy.Id).Match!.Id);
-            Assert.AreEqual(secondGirl.Id, result.First(x => x.Id == fourthBoy.Id).Match!.Id);
+            Assert.AreEqual(4, result.Pairings.Count);
+            Assert.AreEqual(0, result.LeftoverUsers.Count);
+            Assert.AreEqual(fourthGirl.Id, result.Pairings.First(x => x.Male.Id == firstBoy.Id).Female.Id);
+            Assert.AreEqual(firstGirl.Id, result.Pairings.First(x => x.Male.Id == secondBoy.Id).Female.Id);
+            Assert.AreEqual(thirdGirl.Id, result.Pairings.First(x => x.Male.Id == thirdBoy.Id).Female.Id);
+            Assert.AreEqual(secondGirl.Id, result.Pairings.First(x => x.Male.Id == fourthBoy.Id).Female.Id);
         }
     }
 }

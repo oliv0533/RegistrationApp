@@ -68,8 +68,8 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
             var result = await commandHandler.Handle(command, new CancellationToken());
 
             //Assert
-            Assert.AreEqual(2, result.Count);
-            Assert.AreEqual(result.FirstOrDefault(x => x.Id == "some-id"), null);
+            Assert.AreEqual(1, result.Pairings.Count);
+            Assert.NotNull(result.LeftoverUsers.FirstOrDefault(x => x.Id == "some-id"));
         }
 
         [Test]
@@ -126,8 +126,10 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
             var result = await commandHandler.Handle(command, new CancellationToken());
 
             //Assert
-            Assert.AreEqual(2, result.Count);
-            Assert.AreEqual(result.FirstOrDefault(x => x.Id == "some-id"), null);
+            Assert.AreEqual(1, result.Pairings.Count);
+            Assert.AreEqual(1, result.LeftoverUsers.Count);
+            Assert.AreEqual(result.Pairings.FirstOrDefault(x => x.Male.Id == "some-id"), null);
+            Assert.NotNull(result.LeftoverUsers.FirstOrDefault(x => x.Id == "some-id"));
         }
     }
 }

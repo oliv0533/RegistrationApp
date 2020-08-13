@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using MediatR;
 using RegistrationApp.Messaging.Commands.SetPartnerForCouple;
 using RegistrationApp.Messaging.Models;
@@ -12,20 +13,20 @@ using RegistrationAppDAL.Models;
 
 namespace RegistrationApp.Messaging.Queries.GetRandomPairingsOfAttendingUsersWithLevel
 {
-    public class GetRandomPairingsOfAttendingUsersWithLevelQueryHandler : IRequestHandler<GetRandomPairingsOfAttendingUsersWithLevelQuery, List<UserResponseModel>>
+    public class GetRandomPairingsOfAttendingUsersWithLevelQueryHandler : IRequestHandler<GetRandomPairingsOfAttendingUsersWithLevelQuery, LevelPairingsModel>
     {
         private readonly IMediator _mediator;
 
         private List<ApplicationUser> _attendingMen;
         private List<ApplicationUser> _attendingWomen;
 
-        public async Task<List<UserResponseModel>> Handle(GetRandomPairingsOfAttendingUsersWithLevelQuery request, CancellationToken cancellationToken)
+        public async Task<LevelPairingsModel> Handle(GetRandomPairingsOfAttendingUsersWithLevelQuery request, CancellationToken cancellationToken)
         {
             var attendingUsers = await _mediator.Send(new GetAllAttendingUsersWithLevelQuery(request.Levels), cancellationToken);
             _attendingMen = GetAttendingUsersByGenderOrderedByDate(DanceGender.Male, attendingUsers);
             _attendingWomen = GetAttendingUsersByGenderOrderedByDate(DanceGender.Female, attendingUsers);
             
-            LimitAmountOfAttendeesAndSortByMatches();
+            LimitAmountOfAttendeesAndSortByMatches(out var leftoverUsers);
 
             FindPreferences(_attendingMen, _attendingWomen, out var malePreferenceModels);
             FindPreferences(_attendingWomen, _attendingMen, out var femalePreferenceModels);
@@ -38,7 +39,14 @@ namespace RegistrationApp.Messaging.Queries.GetRandomPairingsOfAttendingUsersWit
 
             await SetPartnersForNewlyMatchedDancers(cancellationToken, maleResponseModels);
 
-            return maleResponseModels.Concat(femaleResponseModels).ToList();
+            var pairings = maleResponseModels.Select(x => new PairingModel(x.Match!, x));
+
+            return new LevelPairingsModel()
+            {
+                LeftoverUsers = leftoverUsers,
+                Pairings = pairings.ToList(),
+                Levels = request.Levels
+            };
         }
 
         private async Task SetPartnersForNewlyMatchedDancers(CancellationToken cancellationToken, List<UserResponseModel> maleResponseModels)
@@ -111,7 +119,11 @@ namespace RegistrationApp.Messaging.Queries.GetRandomPairingsOfAttendingUsersWit
                     x.Id, 
                     x.NormalizedUserName, 
                     x.Email, 
-                    x.PhoneNumber)).ToList();
+                    x.PhoneNumber,
+                    x.Gender)
+                {
+                    Levels = x.Levels
+                }).ToList();
         }
 
         private static void FindPreferences(
@@ -146,26 +158,42 @@ namespace RegistrationApp.Messaging.Queries.GetRandomPairingsOfAttendingUsersWit
             }
         }
 
-        private void LimitAmountOfAttendeesAndSortByMatches()
+        private void LimitAmountOfAttendeesAndSortByMatches(out List<UserResponseModel> leftoverDancers)
         {
             if (_attendingMen.Count < _attendingWomen.Count)
             {
-                _attendingWomen = LimitAttendees(_attendingWomen, _attendingMen);
+                _attendingWomen = LimitAttendees(_attendingWomen, _attendingMen, out leftoverDancers);
             }
             else if (_attendingMen.Count > _attendingWomen.Count)
             {
-                _attendingMen = LimitAttendees(_attendingMen, _attendingWomen);
+                _attendingMen = LimitAttendees(_attendingMen, _attendingWomen, out leftoverDancers);
+            }
+            else
+            {
+                leftoverDancers = new List<UserResponseModel>();
             }
 
             _attendingWomen = _attendingWomen.OrderByDescending(x => x.FormerMatches.Count).ToList();
             _attendingMen = _attendingMen.OrderByDescending(x => x.FormerMatches.Count).ToList();
         }
 
-        private static List<ApplicationUser> LimitAttendees(IEnumerable<ApplicationUser> outnumberingGender, ICollection outnumberedGender)
+        private static List<ApplicationUser> LimitAttendees(IReadOnlyCollection<ApplicationUser> outnumberingGender, ICollection outnumberedGender, out List<UserResponseModel> leftOverUsers)
         {
+            var difference = outnumberingGender.Count - outnumberedGender.Count;
+
+            leftOverUsers = outnumberingGender.TakeLast(difference).Select(x =>
+                new UserResponseModel(
+                    x.Id, 
+                    x.NormalizedUserName, 
+                    x.Email, 
+                    x.PhoneNumber, 
+                    x.Gender)
+                {
+                    Levels = x.Levels
+                }).ToList();
+
             return outnumberingGender
                 .Take(outnumberedGender.Count)
-                .OrderByDescending(x => x.FormerMatches.Count)
                 .ToList();
         }
 

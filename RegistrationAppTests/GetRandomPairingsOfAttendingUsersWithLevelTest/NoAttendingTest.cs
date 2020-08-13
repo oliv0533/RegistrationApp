@@ -41,7 +41,8 @@ namespace RegistrationAppTests.GetRandomPairingsOfAttendingUsersWithLevelTest
             var result = await commandHandler.Handle(command, new CancellationToken());
 
             //Assert
-            Assert.AreEqual(0, result.Count);
+            Assert.AreEqual(0, result.Pairings.Count);
+            Assert.AreEqual(0, result.LeftoverUsers.Count);
 
         }
     }

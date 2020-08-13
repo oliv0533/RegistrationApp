@@ -1,4 +1,7 @@
-﻿namespace RegistrationApp.Messaging.Models
+﻿using System.Collections.Generic;
+using RegistrationAppDAL.Models;
+
+namespace RegistrationApp.Messaging.Models
 {
     public class UserResponseModel
     {
@@ -9,12 +12,19 @@
 
         public UserResponseModel? Match { get; set; }
 
-        public UserResponseModel(string id, string name, string email, string phoneNumber)
+        public List<string> Levels { get; set; }
+
+        public string Gender { get; set; }
+
+
+        public UserResponseModel(string id, string name, string email, string phoneNumber, string gender)
         {
             Id = id;
             Name = name;
             Email = email;
             PhoneNumber = phoneNumber;
+            Gender = gender;
+            Levels = new List<string>();
         }
     }
 }

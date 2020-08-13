@@ -6,7 +6,7 @@ using RegistrationAppDAL.Models;
 
 namespace RegistrationApp.Messaging.Queries.GetRandomPairingsOfAttendingUsersWithLevel
 {
-    public class GetRandomPairingsOfAttendingUsersWithLevelQuery : IRequest<List<UserResponseModel>>
+    public class GetRandomPairingsOfAttendingUsersWithLevelQuery : IRequest<LevelPairingsModel>
     {
         public List<string> Levels { get; }
 
