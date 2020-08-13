@@ -53,12 +53,15 @@
             <span asp-validation-for="Input.DanceGender" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Input.DanceLevel"></label>
+            <label> Hold </label> <br />
+            <div class="form-group">
                 @foreach (var value in Model.GetAllLevelsInDanish())
                 {
-                    @:<input type="checkbox" onchange="eventArgs=>{CheckboxClicked(value, eventArgs.Value);}" />@value<br />
+                    @:<input type="checkbox" onchange="(eventArgs)=>Model.CheckboxClicked(value, eventArgs.Value)" /> @value <br/>
                 }
-            <span asp-validation-for="Input.DanceLevel" class="text-danger"></span>
+            </div>
+
+            <span class="text-danger">@Model.LevelErrorMessage</span>
         </div>
         <button type="submit" class="btn btn-primary">Register</button>
     </form>

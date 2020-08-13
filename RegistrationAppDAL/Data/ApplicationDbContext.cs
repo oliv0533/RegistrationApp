@@ -34,6 +34,13 @@ namespace RegistrationAppDAL.Data
                     v => JsonConvert.SerializeObject(v),
                     v => JsonConvert.DeserializeObject<List<string>>(v))
                 .Metadata.SetValueComparer(valueComparer);
+
+            builder.Entity<AllPairingsModel>().Property(a => a.Levels)
+                .HasConversion(
+                    v => JsonConvert.SerializeObject(v),
+                    v => JsonConvert.DeserializeObject<List<string>>(v))
+                .Metadata.SetValueComparer(valueComparer);
+
             base.OnModelCreating(builder);
         }
 

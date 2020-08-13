@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -70,10 +71,6 @@ namespace RegistrationApp.Areas.Identity.Pages.Account
             public string TelephoneNumber { get; set; }
 
             [Required]
-            [Display(Name = "Hold")]
-            public string DanceLevel { get; set; }
-
-            [Required]
             [Display(Name = "Dansekøn")]
             public string DanceGender { get; set; }
 
@@ -90,6 +87,8 @@ namespace RegistrationApp.Areas.Identity.Pages.Account
         }
 
         public List<string> Levels { get; set; } = new List<string>();
+
+        public string LevelErrorMessage { get; set; }
 
         public void CheckboxClicked(string level, object checkedValue)
         {
@@ -135,11 +134,29 @@ namespace RegistrationApp.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
+        public bool ValidLevels()
+        {
+            if (Levels.Count == 1)
+            {
+                return true;
+            }
+
+            if (Levels.Count == 2 && Levels.All(x =>
+                x == _enumConverterService.ConvertLevelToDanishString(Level.Advanced) ||
+                x == _enumConverterService.ConvertLevelToDanishString(Level.Theme)))
+            {
+                return true;
+            }
+
+            LevelErrorMessage = "Ugyldig holdvalg";
+            return false;
+        }
+
         public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && ValidLevels())
             {
                 var levels = new List<string>();
 
