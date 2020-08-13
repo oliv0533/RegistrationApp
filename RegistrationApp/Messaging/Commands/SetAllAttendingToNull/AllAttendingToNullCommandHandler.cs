@@ -9,15 +9,15 @@ namespace RegistrationApp.Messaging.Commands.SetAllAttendingToNull
     {
         private readonly ApplicationDbContext _context;
 
-        public Task<Unit> Handle(AllAttendingToNullCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(AllAttendingToNullCommand request, CancellationToken cancellationToken)
         {
             foreach (var applicationUser in _context.Users)
             {
                 applicationUser.Attending = null;
             }
 
-            _context.SaveChangesAsync(cancellationToken);
-            return Task.FromResult(Unit.Value);
+            await _context.SaveChangesAsync(cancellationToken);
+            return Unit.Value;
         }
 
         public AllAttendingToNullCommandHandler(ApplicationDbContext context)
