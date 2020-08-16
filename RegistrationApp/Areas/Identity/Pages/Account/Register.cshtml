@@ -55,12 +55,15 @@
         <div class="form-group">
             <label> Hold </label> <br />
             <div class="form-group">
-                @foreach (var value in Model.GetAllLevelsInDanish())
-                {
-                    @:<input type="checkbox" onchange="(eventArgs)=>Model.CheckboxClicked(value, eventArgs.Value)" /> @value <br/>
-                }
+                <label asp-for="Input.BeginnerLevel"></label>
+                <input type="checkbox" asp-for="Input.BeginnerLevel"/> 
+                <label asp-for="Input.NoviceLevel"></label>
+                <input type="checkbox" asp-for="Input.NoviceLevel"/> 
+                <label asp-for="Input.AdvancedLevel"></label>
+                <input type="checkbox" asp-for="Input.AdvancedLevel"/> 
+                <label asp-for="Input.ThemeLevel"></label>
+                <input type="checkbox" asp-for="Input.ThemeLevel"/> 
             </div>
-
             <span class="text-danger">@Model.LevelErrorMessage</span>
         </div>
         <button type="submit" class="btn btn-primary">Register</button>

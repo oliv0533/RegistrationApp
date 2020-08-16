@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using RegistrationApp.Messaging.Models;
 using RegistrationApp.Services;
 using RegistrationAppDAL.Models;
 
@@ -22,15 +23,15 @@ namespace RegistrationApp.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly IEnumConverterService _enumConverterService;
 
         public RegisterModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
             IEnumConverterService enumConverterService)
@@ -84,15 +85,64 @@ namespace RegistrationApp.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            private bool _beginnerLevel;
+
+            [Display(Name = "Begynder")]
+            public bool BeginnerLevel
+            {
+                get => _beginnerLevel;
+                set
+                {
+                    CheckBoxChanged(Constants.BeginnerDanish, value);
+                    _beginnerLevel = value;
+                }
+            }
+
+            private bool _noviceLevel;
+
+
+            [Display(Name = "Fortsætter")]
+            public bool NoviceLevel {
+                get => _noviceLevel;
+                set
+                {
+                    CheckBoxChanged(Constants.NoviceDanish, value);
+                    _noviceLevel = value;
+                }
+            }
+
+            private bool _advancedLevel;
+            [Display(Name = "Videregående")]
+            public bool AdvancedLevel {
+                get => _advancedLevel;
+                set
+                {
+                    CheckBoxChanged(Constants.AdvancedDanish, value);
+                    _advancedLevel = value;
+                }
+            }
+
+            private bool _themeLevel;
+
+            [Display(Name = "Tema")]
+            public bool ThemeLevel {
+                get => _themeLevel;
+                set
+                {
+                    CheckBoxChanged(Constants.ThemeDanish, value);
+                    _themeLevel = value;
+                }
+            }
         }
 
-        public List<string> Levels { get; set; } = new List<string>();
+        public static List<string> Levels { get; set; } = new List<string>();
 
         public string LevelErrorMessage { get; set; }
 
-        public void CheckboxClicked(string level, object checkedValue)
+        public static void CheckBoxChanged(string level, bool checkedValue)
         {
-            if ((bool)checkedValue)
+            if (checkedValue)
             {
                 if (!Levels.Contains(level))
                 {
@@ -106,11 +156,6 @@ namespace RegistrationApp.Areas.Identity.Pages.Account
                     Levels.Remove(level);
                 }
             }
-        }
-
-        public List<string> GetAllLevelsInDanish()
-        {
-            return (from level in (Level.GetAllLevels()) select _enumConverterService.ConvertLevelToDanishString(level)).ToList();
         }
 
         public List<string> GetAllGendersInDanish()
@@ -136,20 +181,18 @@ namespace RegistrationApp.Areas.Identity.Pages.Account
 
         public bool ValidLevels()
         {
-            if (Levels.Count == 1)
-            {
-                return true;
-            }
 
-            if (Levels.Count == 2 && Levels.All(x =>
-                x == _enumConverterService.ConvertLevelToDanishString(Level.Advanced) ||
-                x == _enumConverterService.ConvertLevelToDanishString(Level.Theme)))
+            switch (Levels.Count)
             {
-                return true;
+                case 1:
+                case 2 when Levels.All(x =>
+                    x == _enumConverterService.ConvertLevelToDanishString(Level.Advanced) ||
+                    x == _enumConverterService.ConvertLevelToDanishString(Level.Theme)):
+                    return true;
+                default:
+                    LevelErrorMessage = "Ugyldig holdvalg";
+                    return false;
             }
-
-            LevelErrorMessage = "Ugyldig holdvalg";
-            return false;
         }
 
         public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
