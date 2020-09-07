@@ -1,4 +1,6 @@
 ﻿@page
+@using System.Xml.Linq
+@using RegistrationApp.Messaging.Models
 @model IndexModel
 @{
     ViewData["Title"] = "Profile";
@@ -12,13 +14,45 @@
         <form id="profile-form" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Username"></label>
-                <input asp-for="Username" class="form-control" disabled />
-            </div>
-            <div class="form-group">
                 <label asp-for="Input.PhoneNumber"></label>
                 <input asp-for="Input.PhoneNumber" class="form-control" />
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.DanceGender"></label>
+                <select asp-for="Input.DanceGender" class="form-control">
+                    @foreach (var value in Model.GetAllGendersInDanish())
+                    {
+                        <option value="@value">@value</option>
+                    }
+                </select>
+                <span asp-validation-for="Input.DanceGender" class="text-danger"></span>
+            </div>
+            <div>
+                Du er lige nu tilmeldt:
+                <ul>
+                    @foreach (var level in IndexModel.Levels)
+                    {
+                        <li>@level</li>
+                    }
+                </ul>
+            </div>
+            <div class="form-group">
+                <label> Hold </label> <br />
+                  <div class="form-group">
+                      <label asp-for="Input.BeginnerLevel"></label>
+                      <input type="checkbox" asp-for="Input.BeginnerLevel" checked="@IndexModel.Levels.Contains(Constants.BeginnerDanish)" />
+                      <br />
+                      <label asp-for="Input.NoviceLevel"></label>
+                      <input type="checkbox" asp-for="Input.NoviceLevel" checked="@IndexModel.Levels.Contains(Constants.NoviceDanish)"/>
+                      <br />
+                      <label asp-for="Input.AdvancedLevel"></label>
+                      <input type="checkbox" asp-for="Input.AdvancedLevel" checked="@IndexModel.Levels.Contains(Constants.AdvancedDanish)"/>
+                      <br />
+                      <label asp-for="Input.ThemeLevel"></label>
+                      <input type="checkbox" asp-for="Input.ThemeLevel" checked="@IndexModel.Levels.Contains(Constants.ThemeDanish)"/>
+                    </div>
+                <span class="text-danger">@Model.LevelErrorMessage</span>
             </div>
             <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
         </form>

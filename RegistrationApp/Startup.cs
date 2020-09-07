@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RegistrationApp.Areas.Identity;
+using RegistrationApp.Helpers;
 using RegistrationApp.Services;
 using RegistrationAppDAL.Data;
 using RegistrationAppDAL.Models;
@@ -35,8 +36,7 @@ namespace RegistrationApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(ConnectionHelper.GetRdsConnectionString()));
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();

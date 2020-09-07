@@ -18,10 +18,15 @@
     "RegistrationApp": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "RDS_PORT": "3306",
+        "RDS_USERNAME": "admin",
+        "RDS_HOSTNAME": "database-1.c4vdixggu8nj.eu-west-1.rds.amazonaws.com",
+        "RDS_DB_NAME": "RegistrationAppDB",
+        "RDS_PASSWORD": "250Bmh1e7DbqM59l"
+      },
+      "applicationUrl": "https://localhost:5001;http://localhost:5000"
     }
   }
 }

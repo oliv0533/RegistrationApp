@@ -160,7 +160,7 @@ namespace RegistrationApp.Areas.Identity.Pages.Account
 
         public List<string> GetAllGendersInDanish()
         {
-            return (from gender in (DanceGender.GetAllDanceGenders()) select _enumConverterService.ConvertGenderToDanishString(gender)).ToList();
+            return _enumConverterService.GetAllGendersInDanish();
         }
 
         private string GetLevelFromDanishString(string level)
@@ -179,7 +179,7 @@ namespace RegistrationApp.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
-        public bool ValidLevels()
+        private bool ValidLevels()
         {
 
             switch (Levels.Count)
@@ -216,7 +216,7 @@ namespace RegistrationApp.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    _logger.LogInformation("UserId created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

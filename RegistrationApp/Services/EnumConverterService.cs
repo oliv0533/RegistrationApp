@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using RegistrationApp.Messaging.Models;
 using RegistrationAppDAL.Models;
 
@@ -49,6 +51,12 @@ namespace RegistrationApp.Services
                 _ => throw new InvalidOperationException("Enum not found")
             };
         }
+
+        public List<string> GetAllGendersInDanish()
+        {
+            return (from gender in (DanceGender.GetAllDanceGenders()) select ConvertGenderToDanishString(gender)).ToList();
+        }
+
     }
 
     public interface IEnumConverterService
@@ -57,6 +65,7 @@ namespace RegistrationApp.Services
         public string ConvertDanishStringToLevel(string level);
         public string ConvertGenderToDanishString(string gender);
         public string ConvertDanishStringToGender(string gender);
+        public List<string> GetAllGendersInDanish();
 
     }
 }

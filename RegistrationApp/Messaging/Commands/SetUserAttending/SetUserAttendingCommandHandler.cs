@@ -19,7 +19,7 @@ namespace RegistrationApp.Messaging.Commands.SetUserAttending
 
             if (user == null)
             {
-                throw new InvalidOperationException("User not found");
+                throw new InvalidOperationException("UserId not found");
             }
             
             user.Attending = request.Attending;
